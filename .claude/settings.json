@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__deep-wiki__read_wiki_contents",
+      "mcp__deep-wiki__ask_question",
+      "mcp__deep-wiki__read_wiki_structure",
+      "WebFetch(domain:hex.pm)",
+      "WebFetch(domain:hexdocs.pm)",
+      "WebFetch(domain:tidewave.ai)",
+      "Bash(iex:*)",
+      "Bash(mix:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(grep:*)",
+      "Bash(awk:*)",
+      "Bash(sed:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(touch:*)",
+      "Bash(mkdir:*)",
+      "Bash(just:*)",
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(rg:*)",
+      "Bash(rm:*)",
+      "Bash(run:*)",
+      "Bash(nix-env:*)",
+      "Bash(nix develop:*)",
+      "Bash(nix run:*)",
+      "Bash(nix flake:*)",
+      "Bash(nix build:*)"
+    ],
+    "deny": ["Bash(rm:-rf)"]
+  },
+  "enabledMcpjsonServers": ["deep-wiki"],
+  "enableAllProjectMcpServers": true,
+  "includeCoAuthoredBy": false
+}

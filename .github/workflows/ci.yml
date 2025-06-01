@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  MIX_ENV: test
+
+jobs:
+  test:
+    name: Compile & Lint
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        elixir: ['1.17']
+        otp: ['26', '27']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: ${{ matrix.elixir }}
+        otp-version: ${{ matrix.otp }}
+    
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          deps
+          _build
+        key: ${{ runner.os }}-mix-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-mix-${{ matrix.otp }}-${{ matrix.elixir }}-
+    
+    - name: Install dependencies
+      run: mix deps.get
+    
+    - name: Check code formatting
+      run: mix format --check-formatted
+    
+    - name: Compile code (warnings as errors)
+      run: mix compile --warnings-as-errors
+    
+    - name: Skip tests in CI (all tests require network)
+      run: |
+        echo "⚠️  Skipping all tests in CI environment"
+        echo "📝 All tests require a running Langfuse instance with network access"
+        echo "✅ Tests should be run locally with proper Langfuse setup"
+    
+    - name: Skip coverage check (no tests run in CI)
+      run: |
+        echo "⚠️  Skipping coverage check - no tests run in CI environment"
+        echo "📝 Coverage should be checked locally with proper Langfuse setup"
+    
+    - name: Run linter (if available)
+      run: |
+        if mix help credo >/dev/null 2>&1; then
+          mix credo --strict
+        else
+          echo "Credo not available, skipping lint"
+        fi
+      continue-on-error: true
+    
+    - name: Check for security vulnerabilities
+      run: mix deps.audit
+      continue-on-error: true
+
+  format-check:
+    name: Code Formatting
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.17'
+        otp-version: '27'
+    
+    - name: Check formatting
+      run: mix format --check-formatted
+
+  deps-audit:
+    name: Dependencies Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.17'
+        otp-version: '27'
+    
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          deps
+          _build
+        key: ${{ runner.os }}-mix-deps-audit-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-mix-deps-audit-
+    
+    - name: Install dependencies
+      run: mix deps.get
+    
+    - name: Audit dependencies
+      run: mix deps.audit

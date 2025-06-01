@@ -60,7 +60,9 @@ defmodule LangfuseSdk.MixProject do
       {:req, "~> 0.4 or ~> 0.5"},
       {:uuid, "~> 1.1", override: true},
       {:faker, "~> 0.18.0", only: :test},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false}
     ]
   end
 
