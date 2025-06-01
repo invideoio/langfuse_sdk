@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(iex:*)",
+      "mcp__tidewave__get_logs"
+    ],
+    "deny": []
+  },
+  "enabledMcpjsonServers": [
+    "deep-wiki"
+  ],
+  "enableAllProjectMcpServers": true
+}
